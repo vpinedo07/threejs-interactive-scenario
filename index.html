@@ -1,11 +1,53 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
+  <!-- =====================================================
+       CONFIGURACIÓN GENERAL
+  ====================================================== -->
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Práctica 1.4 | Escenarios interactivos</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/styles.css">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Escenario 3D interactivo con Three.js y física Rapier"
+  >
+
+  <title>
+    Práctica 1.4 | Escenario físico interactivo
+  </title>
+
+
+  <!-- =====================================================
+       BOOTSTRAP 5
+  ====================================================== -->
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+
+  <!-- =====================================================
+       CSS PERSONALIZADO
+  ====================================================== -->
+
+  <link
+    rel="stylesheet"
+    href="./assets/css/styles.css"
+  >
+
+
+  <!-- =====================================================
+       IMPORT MAP THREE.JS
+  ====================================================== -->
+
   <script type="importmap">
   {
     "imports": {
@@ -14,27 +56,531 @@
     }
   }
   </script>
-</head>
-<body>
-  <div id="scene-container"></div>
-  <div class="crosshair">+</div>
 
-  <section class="hud card border-0 shadow-lg text-white p-3">
-    <h1 class="h5 mb-2">Escenarios interactivos</h1>
-    <p class="small mb-2">Haz clic en el escenario para activar el mouse.</p>
-    <div class="d-flex flex-wrap gap-2 small">
-      <span><kbd class="key">WASD</kbd> Mover</span>
-      <span><kbd class="key">SPACE</kbd> Saltar</span>
-      <span><kbd class="key">CLICK</kbd> Láser</span>
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       CONTENEDOR DEL ESCENARIO THREE.JS
+  ====================================================== -->
+
+  <div id="scene-container"></div>
+
+
+  <!-- =====================================================
+       MIRA DEL JUGADOR
+  ====================================================== -->
+
+  <div class="crosshair">
+
+    +
+
+  </div>
+
+
+  <!-- =====================================================
+       HUD / PANEL DE CONTROL
+  ====================================================== -->
+
+  <section
+    class="
+      hud
+      card
+      border-0
+      shadow-lg
+      text-white
+      p-3
+    "
+  >
+
+    <!-- TÍTULO -->
+
+    <div class="mb-3">
+
+      <h1 class="h5 mb-1">
+
+        🌌 Escenario físico nocturno
+
+      </h1>
+
+      <p class="small mb-0 text-white-50">
+
+        Three.js + Rapier Physics
+
+      </p>
+
     </div>
-    <div class="mt-2 small">Objetivo: derribar y desplazar objetos 3D.</div>
+
+
+    <!-- ===================================================
+         INSTRUCCIONES
+    ==================================================== -->
+
+    <div class="mb-3">
+
+      <p class="small mb-2">
+
+        Haz clic en el escenario para controlar la cámara.
+
+      </p>
+
+      <div
+        class="
+          d-flex
+          flex-wrap
+          gap-2
+          small
+        "
+      >
+
+        <span>
+
+          <kbd class="key">
+
+            W A S D
+
+          </kbd>
+
+          Mover
+
+        </span>
+
+
+        <span>
+
+          <kbd class="key">
+
+            SPACE
+
+          </kbd>
+
+          Saltar
+
+        </span>
+
+
+        <span>
+
+          <kbd class="key">
+
+            CLICK
+
+          </kbd>
+
+          Láser
+
+        </span>
+
+
+        <span>
+
+          <kbd class="key">
+
+            ESC
+
+          </kbd>
+
+          Liberar mouse
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <hr class="border-light opacity-25">
+
+
+    <!-- ===================================================
+         CONTROL DE POTENCIA DEL LÁSER
+    ==================================================== -->
+
+    <div class="mb-3">
+
+      <div
+        class="
+          d-flex
+          justify-content-between
+          align-items-center
+          mb-1
+        "
+      >
+
+        <label
+          for="laser-power"
+          class="form-label small mb-0"
+        >
+
+          ⚡ Potencia del láser
+
+        </label>
+
+
+        <span
+          class="
+            badge
+            bg-info
+            text-dark
+          "
+        >
+
+          <span id="laser-power-value">
+
+            12
+
+          </span>
+
+        </span>
+
+      </div>
+
+
+      <input
+        type="range"
+        class="form-range"
+        id="laser-power"
+        min="3"
+        max="40"
+        step="1"
+        value="12"
+      >
+
+
+      <div
+        class="
+          d-flex
+          justify-content-between
+          small
+          text-white-50
+        "
+      >
+
+        <span>
+
+          Suave
+
+        </span>
+
+        <span>
+
+          Fuerte
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         CANTIDAD DE OBJETOS
+    ==================================================== -->
+
+    <div class="mb-3">
+
+      <div
+        class="
+          d-flex
+          justify-content-between
+          align-items-center
+          mb-1
+        "
+      >
+
+        <label
+          for="object-count"
+          class="form-label small mb-0"
+        >
+
+          🔷 Cantidad de objetos
+
+        </label>
+
+
+        <span
+          class="
+            badge
+            bg-warning
+            text-dark
+          "
+        >
+
+          <span id="object-count-value">
+
+            35
+
+          </span>
+
+        </span>
+
+      </div>
+
+
+      <input
+        type="range"
+        class="form-range"
+        id="object-count"
+        min="20"
+        max="100"
+        step="1"
+        value="35"
+      >
+
+
+      <div
+        class="
+          d-flex
+          justify-content-between
+          small
+          text-white-50
+        "
+      >
+
+        <span>
+
+          20
+
+        </span>
+
+        <span>
+
+          100
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         BOTÓN REGENERAR
+    ==================================================== -->
+
+    <div class="d-grid mb-3">
+
+      <button
+        type="button"
+        id="regenerate-objects"
+        class="
+          btn
+          btn-info
+          btn-sm
+          fw-semibold
+        "
+      >
+
+        🔄 Generar nuevos objetos
+
+      </button>
+
+    </div>
+
+
+    <!-- ===================================================
+         TIPOS DE OBJETOS
+    ==================================================== -->
+
+    <div>
+
+      <p class="small mb-2">
+
+        <strong>
+
+          Figuras disponibles
+
+        </strong>
+
+      </p>
+
+
+      <div
+        class="
+          d-flex
+          flex-wrap
+          gap-1
+        "
+      >
+
+        <span
+          class="
+            badge
+            rounded-pill
+            text-bg-secondary
+          "
+        >
+
+          🧊 Cubos
+
+        </span>
+
+
+        <span
+          class="
+            badge
+            rounded-pill
+            text-bg-secondary
+          "
+        >
+
+          ⚪ Esferas
+
+        </span>
+
+
+        <span
+          class="
+            badge
+            rounded-pill
+            text-bg-secondary
+          "
+        >
+
+          🔵 Cilindros
+
+        </span>
+
+
+        <span
+          class="
+            badge
+            rounded-pill
+            text-bg-secondary
+          "
+        >
+
+          🔺 Conos
+
+        </span>
+
+
+        <span
+          class="
+            badge
+            rounded-pill
+            text-bg-secondary
+          "
+        >
+
+          💊 Cápsulas
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <hr class="border-light opacity-25">
+
+
+    <!-- ===================================================
+         OBJETIVO
+    ==================================================== -->
+
+    <div class="small text-white-50">
+
+      <strong class="text-white">
+
+        Objetivo:
+
+      </strong>
+
+      recorrer el escenario, empujar objetos físicos y
+      derribarlos utilizando diferentes intensidades del láser.
+
+    </div>
+
   </section>
 
-  <footer class="app-footer text-center py-2 px-3">
-    Programador: NOMBRE DEL ALUMNO · No. de control: XXXXXXXX · Desarrollo de soluciones en ambientes virtuales
+
+  <!-- =====================================================
+       INDICADOR INFERIOR
+  ====================================================== -->
+
+  <div
+    class="
+      position-fixed
+      bottom-0
+      start-50
+      translate-middle-x
+      mb-5
+      text-center
+      small
+      text-white-50
+      d-none
+      d-md-block
+    "
+    style="
+      z-index: 9;
+      pointer-events: none;
+    "
+  >
+
+    Usa ESC para liberar el mouse y modificar los controles.
+
+  </div>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer
+    class="
+      app-footer
+      text-center
+      py-2
+      px-3
+    "
+  >
+
+    Programador:
+    <strong>
+
+      NOMBRE DEL ALUMNO
+
+    </strong>
+
+    ·
+
+    No. de control:
+    <strong>
+
+      XXXXXXXX
+
+    </strong>
+
+    ·
+
+    Desarrollo de soluciones en ambientes virtuales
+
   </footer>
 
-  <script type="module" src="./assets/js/main.js"></script>
-</body>
-</html>
 
+  <!-- =====================================================
+       JAVASCRIPT PRINCIPAL
+  ====================================================== -->
+
+  <script
+    type="module"
+    src="./assets/js/main.js"
+  ></script>
+
+
+  <!-- =====================================================
+       BOOTSTRAP JS
+  ====================================================== -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+
+</body>
+
+</html>
